@@ -19,16 +19,57 @@ cells.forEach((cell) => {
   });
 });
 
-window.addEventListener("keydown", (e) => {
-  if ((Number(e.key) > 0 && Number(e.key) < 10) || e.key === "Delete") {
-    let selected = document.querySelector(".selected");
-    if (selected && !selected.classList.contains("given")) {
-      if (e.key == "Delete") {
-        selected.textContent = "";
-      } else {
-        selected.textContent = e.key;
-      }
+function moveSelected(selected, key) {
+  let row = Array.from(selected.classList)
+    .filter((el) => el.includes("row"))[0]
+    .slice(3);
+  let col = Array.from(selected.classList)
+    .filter((el) => el.includes("col"))[0]
+    .slice(3);
+  // console.log(row, col);
+  if (key.includes("Up")) {
+    row--;
+  } else if (key.includes("Down")) {
+    row++;
+  } else if (key.includes("Right")) {
+    col++;
+  } else if (key.includes("Left")) {
+    col--;
+  }
+
+  if (col === 0) col = 9;
+  if (col === 10) col = 1;
+  if (row === 0) row = 9;
+  if (row === 10) row = 1;
+  // console.log(row, col);
+
+  let rowNum = "row" + row;
+  let colNum = "col" + col;
+  // console.log(rowNum, colNum);
+
+  selected.classList.remove("selected");
+
+  cells.forEach((cell) => {
+    if (cell.classList.contains(rowNum) && cell.classList.contains(colNum)) {
+      cell.classList.add("selected");
     }
+  });
+}
+
+window.addEventListener("keydown", (e) => {
+  let selected = document.querySelector(".selected");
+  if (!selected) return;
+
+  if (!selected.classList.contains("given")) {
+    if (e.key == "Delete") {
+      selected.textContent = "";
+    } else if (Number(e.key) > 0 && Number(e.key) < 10) {
+      selected.textContent = e.key;
+    }
+  }
+
+  if (e.keyCode >= 37 && e.keyCode <= 40) {
+    moveSelected(selected, e.key);
   }
 });
 
