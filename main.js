@@ -15,8 +15,48 @@ function createSudoku() {
   displaySudoku(sudoku, cells);
 }
 
+function checkCorrectDigits(arr) {
+  let sorted = arr.sort().map((el) => Number(el));
+  let total = sorted.reduce((acc, el) => acc + el, 0);
+  return (
+    sorted.every((el) => arr.indexOf(el) === arr.lastIndexOf(el)) &&
+    total === 45
+  );
+}
+
+function getCells(cellsArr, num) {
+  return cellsArr
+    .filter((el) => el.classList.contains(num))
+    .map((el) => el.textContent);
+}
+
+function checkSudoku() {
+  let correct = true;
+  let cellsArr = Array.from(cells);
+  console.clear();
+  for (let i = 1; i <= 9; i++) {
+    let boxDigits = getCells(cellsArr, "box" + i);
+    let rowDigits = getCells(cellsArr, "row" + i);
+    let colDigits = getCells(cellsArr, "col" + i);
+    if (!checkCorrectDigits(boxDigits)) {
+      console.log("box " + i + " is incorrect");
+      correct = false;
+    }
+    if (!checkCorrectDigits(rowDigits)) {
+      console.log("row " + i + " is incorrect");
+      correct = false;
+    }
+    if (!checkCorrectDigits(colDigits)) {
+      console.log("col " + i + " is incorrect");
+      correct = false;
+    }
+  }
+  return correct;
+}
+
 createSudoku();
 
+// Select cell
 cells.forEach((cell) => {
   cell.addEventListener("click", (e) => {
     cells.forEach((cell) => cell.classList.remove("selected"));
@@ -24,6 +64,7 @@ cells.forEach((cell) => {
   });
 });
 
+// Button Logic
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
     if (e.target.classList.contains("reset")) {
@@ -31,10 +72,13 @@ buttons.forEach((button) => {
     } else if (e.target.classList.contains("new")) {
       sudokuString = newSudokuString();
       createSudoku();
+    } else if (e.target.classList.contains("check")) {
+      checkSudoku();
     }
   });
 });
 
+//Keypress logic
 window.addEventListener("keydown", (e) => {
   let selected = document.querySelector(".selected");
   if (!selected) return;
@@ -51,14 +95,3 @@ window.addEventListener("keydown", (e) => {
     moveSelected(selected, e.key, cells);
   }
 });
-
-// Basics of resetting/creating new - need to clear grid before rendering new sudoku
-// window.addEventListener("keyup", (e) => {
-//   if (e.key === "n") {
-//     sudokuString = newSudokuString();
-//     createSudoku();
-//   } else if (e.key === "r") {
-//     cells.forEach((cell) => (cell.textContent = ""));
-//     createSudoku();
-//   }
-// });

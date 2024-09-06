@@ -1,9 +1,9 @@
 <!-- Add in ability to move selected with arrows -->
+<!-- Checking of sudoku -->
+<!-- Reset sudoku -->
+<!-- Load new sudoku -->
 
 Ability to make notes
-Checking of crossword
 Solver?
 Colours?
-Reset sudoku
-Load new sudoku
 Add more seed data
