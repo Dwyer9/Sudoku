@@ -1,11 +1,16 @@
 // let sudokuString =
 //   "5..2...4....6.3....3...9..7..3..7.....7..8...6......2..8......3...4..6.....1..5..";
 import newSudokuString from "./sudokuData.js";
-import { buildSudokuArr, displaySudoku } from "./functions.js";
+import { buildSudokuArr, displaySudoku, moveSelected } from "./functions.js";
 let cells = document.querySelectorAll(".cell");
+let buttons = document.querySelectorAll("button");
 let sudokuString = newSudokuString();
 
 function createSudoku() {
+  cells.forEach((cell) => {
+    cell.textContent = " ";
+    cell.classList.remove("given");
+  });
   let sudoku = buildSudokuArr(sudokuString);
   displaySudoku(sudoku, cells);
 }
@@ -19,42 +24,16 @@ cells.forEach((cell) => {
   });
 });
 
-function moveSelected(selected, key) {
-  let row = Array.from(selected.classList)
-    .filter((el) => el.includes("row"))[0]
-    .slice(3);
-  let col = Array.from(selected.classList)
-    .filter((el) => el.includes("col"))[0]
-    .slice(3);
-  // console.log(row, col);
-  if (key.includes("Up")) {
-    row--;
-  } else if (key.includes("Down")) {
-    row++;
-  } else if (key.includes("Right")) {
-    col++;
-  } else if (key.includes("Left")) {
-    col--;
-  }
-
-  if (col === 0) col = 9;
-  if (col === 10) col = 1;
-  if (row === 0) row = 9;
-  if (row === 10) row = 1;
-  // console.log(row, col);
-
-  let rowNum = "row" + row;
-  let colNum = "col" + col;
-  // console.log(rowNum, colNum);
-
-  selected.classList.remove("selected");
-
-  cells.forEach((cell) => {
-    if (cell.classList.contains(rowNum) && cell.classList.contains(colNum)) {
-      cell.classList.add("selected");
+buttons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    if (e.target.classList.contains("reset")) {
+      createSudoku();
+    } else if (e.target.classList.contains("new")) {
+      sudokuString = newSudokuString();
+      createSudoku();
     }
   });
-}
+});
 
 window.addEventListener("keydown", (e) => {
   let selected = document.querySelector(".selected");
@@ -69,7 +48,7 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.keyCode >= 37 && e.keyCode <= 40) {
-    moveSelected(selected, e.key);
+    moveSelected(selected, e.key, cells);
   }
 });
 

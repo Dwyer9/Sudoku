@@ -30,3 +30,48 @@ export function displaySudoku(sudoku, cells) {
     }
   }
 }
+
+// Functions for loading new sudoku or resetting current sudoku, not needed
+// export function newSudoko() {
+//   sudokuString = newSudokuString();
+//   createSudoku();
+// }
+
+// export function resetSudoku() {
+//   createSudoku();
+// }
+
+export function moveSelected(selected, key, cells) {
+  let row = Array.from(selected.classList)
+    .filter((el) => el.includes("row"))[0]
+    .slice(3);
+  let col = Array.from(selected.classList)
+    .filter((el) => el.includes("col"))[0]
+    .slice(3);
+
+  if (key.includes("Up")) {
+    row--;
+  } else if (key.includes("Down")) {
+    row++;
+  } else if (key.includes("Right")) {
+    col++;
+  } else if (key.includes("Left")) {
+    col--;
+  }
+
+  if (col === 0) col = 9;
+  if (col === 10) col = 1;
+  if (row === 0) row = 9;
+  if (row === 10) row = 1;
+
+  let rowNum = "row" + row;
+  let colNum = "col" + col;
+
+  selected.classList.remove("selected");
+
+  cells.forEach((cell) => {
+    if (cell.classList.contains(rowNum) && cell.classList.contains(colNum)) {
+      cell.classList.add("selected");
+    }
+  });
+}
