@@ -30,6 +30,24 @@ function getCells(cellsArr, num) {
     .map((el) => el.textContent);
 }
 
+function markIncorrect(id, digits) {
+  let incorrect = digits.filter(
+    (num) => digits.indexOf(num) !== digits.lastIndexOf(num)
+  );
+  // let incorrectCells = [];
+
+  cells.forEach((cell) => {
+    if (
+      cell.classList.contains(id) &&
+      incorrect.includes(cell.textContent) &&
+      cell.textContent !== " "
+    ) {
+      // incorrectCells.push(cell);
+      cell.classList.add("incorrect");
+    }
+  });
+}
+
 function checkSudoku() {
   let correct = true;
   let cellsArr = Array.from(cells);
@@ -40,14 +58,17 @@ function checkSudoku() {
     let colDigits = getCells(cellsArr, "col" + i);
     if (!checkCorrectDigits(boxDigits)) {
       console.log("box " + i + " is incorrect");
+      markIncorrect("box" + i, boxDigits);
       correct = false;
     }
     if (!checkCorrectDigits(rowDigits)) {
       console.log("row " + i + " is incorrect");
+      markIncorrect("row" + i, rowDigits);
       correct = false;
     }
     if (!checkCorrectDigits(colDigits)) {
       console.log("col " + i + " is incorrect");
+      markIncorrect("col" + i, colDigits);
       correct = false;
     }
   }
@@ -68,10 +89,14 @@ cells.forEach((cell) => {
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
     if (e.target.classList.contains("reset")) {
-      createSudoku();
+      if (confirm("Are you sure?")) {
+        createSudoku();
+      }
     } else if (e.target.classList.contains("new")) {
-      sudokuString = newSudokuString();
-      createSudoku();
+      if (confirm("Are you sure?")) {
+        sudokuString = newSudokuString();
+        createSudoku();
+      }
     } else if (e.target.classList.contains("check")) {
       checkSudoku();
     }
@@ -86,8 +111,10 @@ window.addEventListener("keydown", (e) => {
   if (!selected.classList.contains("given")) {
     if (e.key == "Delete") {
       selected.textContent = "";
+      selected.classList.remove("incorrect");
     } else if (Number(e.key) > 0 && Number(e.key) < 10) {
       selected.textContent = e.key;
+      selected.classList.remove("incorrect");
     }
   }
 

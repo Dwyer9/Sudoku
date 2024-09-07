@@ -40,6 +40,11 @@ body {
   font-weight: 600;
 }
 
+.incorrect {
+  color: red;
+  /* background-color: lightcoral; */
+}
+
 .given {
   color: black;
 }
